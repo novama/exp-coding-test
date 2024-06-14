@@ -14,7 +14,7 @@ This PowerShell script is designed to monitor folders for file processing based 
 - Utilizes an external REST endpoint for authentication and authorization using a JWT token.
 
 #### Requirements
-- PowerShell 5.1 or later
+- PowerShell 5.1 or later (To check your version use the command: `$PSVersionTable.PSVersion`)
 - Internet connection for making REST API calls
 - Authentication credentials (username and password) stored in environment variables
 

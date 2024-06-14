@@ -26,14 +26,10 @@ $authEndpoint = "https://reqres.in/api/auth"
 $restEndpoint = "https://reqres.in/api/errorFolder"
 
 # Retrieve authentication credentials from environment variables
-$username = [System.Environment]::GetEnvironmentVariable("API_USERNAME")
-$password = [System.Environment]::GetEnvironmentVariable("API_PASSWORD")
 # Before running the script, ensure that the environment variables 
 # API_USERNAME and API_PASSWORD are set in your system.
-# You can set these variables in PowerShell like this:
-#[System.Environment]::SetEnvironmentVariable("API_USERNAME", "your_username", "Machine")
-#[System.Environment]::SetEnvironmentVariable("API_PASSWORD", "your_password", "Machine")
-
+$username = [System.Environment]::GetEnvironmentVariable("API_USERNAME")
+$password = [System.Environment]::GetEnvironmentVariable("API_PASSWORD")
 
 # Log function
 function Log-Message {
