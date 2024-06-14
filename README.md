@@ -35,7 +35,7 @@ We have folders that have files in them that move through the system as they pro
 }
 ```
 
-**NOTE:** You can use a fake URL service to prove this works (POST <https://reqres.in/api/errorFolder>) to send data. It will always return a 200, but assume other errors an occur.
+**NOTE:** You can use a fake URL service to prove this works (POST [https://reqres.in/api/errorFolder](https://reqres.in/api/errorFolder)) to send data. It will always return a 200, but assume other errors an occur.
 
 
 ## AWS Design
@@ -50,7 +50,7 @@ We need to take data from the Powershell script above and ingest it into AWS. We
 - We also want to be able to search it by affected date and affected folder. Affected date is the more common use case.
 - Must have metrics on how often the application is being used and what the HTTP status has returned.
 
-**NOTE:** <https://www.drawio.com/> is a great free tool for diagramming. Feel free to use this.
+**NOTE:** [https://www.drawio.com](https://www.drawio.com/) is a great free tool for diagramming. Feel free to use this.
 
 
 ## Python
