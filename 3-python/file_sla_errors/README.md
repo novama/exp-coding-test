@@ -128,7 +128,7 @@ pytest tests/
 
 #### Deployment
 
-To deploy the Lambdas, use the provided `deploy.sh` script in the `deploy` directory, which packages and uploads the Lambda functions to AWS.
+To deploy the Lambdas, use the provided `deploy.sh` or `deploy.ps1` scripts in the `deploy` directory, which packages and uploads the Lambda functions to AWS.
 
 Ensure you have the necessary IAM permissions and AWS CLI configured before running the deployment script.
 
