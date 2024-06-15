@@ -73,6 +73,12 @@ function Check-SLA {
     $slaDate = $currentDate - $slaTime
     $errorFiles = @()
 
+    # Ensure folder exists
+    if (-not (Test-Path -Path $folder)) {
+        Log-Message "Folder not found: $folder"
+        return $null
+    }
+
     Get-ChildItem -Path $folder -File | ForEach-Object {
         if ($_.CreationTime -lt $slaDate) {
             $errorFiles += [PSCustomObject]@{
