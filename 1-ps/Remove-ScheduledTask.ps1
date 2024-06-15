@@ -1,5 +1,9 @@
-# Notes: To run this script, open PowerShell as an administrator.
-# This script will check if the scheduled task named "Check SLA Files" exists and remove it if it does.
+<# 
+.SYNOPSIS
+    This script will check if the scheduled task named "Check SLA Files" exists and remove it if it does.
+.NOTES
+    - To run this script, open PowerShell as an administrator.
+#>
 
 # Define variables
 $taskName = "Check SLA Files"

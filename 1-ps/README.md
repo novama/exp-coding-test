@@ -20,7 +20,7 @@ This PowerShell script is designed to monitor folders for file processing based 
 
 #### Usage
 ##### Configuration
-- Set Environment Variables:
+- **Set Environment Variables**:
  
     `API_USERNAME`: Your username for authentication.
 
