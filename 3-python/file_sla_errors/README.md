@@ -10,6 +10,7 @@ This project consists of two AWS Lambda functions, `auth_lambda` and `file_sla_e
 
 ##### 1. `auth_lambda`
 This Lambda function handles user authentication using AWS Cognito. It validates the provided username and password, returning a JWT token upon successful authentication.
+Additionally, it logs custom metrics to CloudWatch.
 
 ###### File Structure
 ```
@@ -26,14 +27,17 @@ auth_lambda/
 The main Lambda function for user authentication:
 - Creates a Cognito user pool and client.
 - Authenticates users and returns a JWT token.
+- Logs successful authentication and error metrics to CloudWatch.
 
 ###### `test_auth_lambda.py`
 Unit tests for the `auth_lambda` function:
 - Mocks AWS Cognito services.
 - Tests valid and invalid authentication scenarios.
+- Mocks the Lambda context to include `function_name` for CloudWatch metrics.
 
 ##### 2. `file_sla_error_lambda`
 This Lambda function processes file SLA errors, validates JWT tokens, and stores error data in DynamoDB.
+It also logs custom metrics to CloudWatch.
 
 ###### File Structure
 ```
@@ -50,11 +54,14 @@ file_sla_error_lambda/
 The main Lambda function for processing file SLA errors:
 - Validates JWT tokens using AWS Cognito's JWKS endpoint.
 - Processes and stores SLA error data in DynamoDB.
+- Logs various metrics to CloudWatch, including unauthorized requests, invalid tokens, JWKS fetch errors, bad requests, successful processing, and DynamoDB errors.
+
 
 ###### `test_file_sla_error_lambda.py`
 Unit tests for the `file_sla_error_lambda` function:
 - Mocks AWS DynamoDB and Cognito services.
 - Tests valid and invalid token scenarios.
+- Mocks the Lambda context to include `function_name` for CloudWatch metrics.
 
 #### Dependencies
 
@@ -67,6 +74,7 @@ botocore
 moto
 python-jose
 pytest
+requests
 ```
 
 **file_sla_error_lambda/requirements.txt**
@@ -95,6 +103,20 @@ env =
     AWS_SECRET_ACCESS_KEY=test_secret_key
     DYNAMODB_TABLE=FileSlaErrors
 ```
+
+#### CloudWatch Metrics
+
+Both Lambda functions log custom metrics to CloudWatch for monitoring purposes. The metrics are logged under the `FileSlaErrors` namespace and include:
+
+- auth_lambda:
+    - SuccessfulAuth: Logged on successful user authentication.
+- file_sla_error_lambda:
+    - UnauthorizedRequests: Logged when authorization header is missing or invalid.
+    - InvalidTokens: Logged when the JWT token is invalid.
+    - JWKSFetchErrors: Logged when there is an error fetching the JWKS.
+    - BadRequest: Logged when the request body is invalid.
+    - SuccessfulProcess: Logged when the SLA error data is successfully processed.
+    - DynamoDBErrors: Logged when there is an error storing data in DynamoDB.
 
 #### Testing
 

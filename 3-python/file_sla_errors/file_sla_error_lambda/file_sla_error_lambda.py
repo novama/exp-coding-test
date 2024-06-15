@@ -12,6 +12,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 dynamodb = boto3.resource('dynamodb')
+cloudwatch_client = boto3.client('cloudwatch')
 table_name = os.environ['DYNAMODB_TABLE']
 region = os.environ['AWS_DEFAULT_REGION']
 
@@ -35,6 +36,23 @@ def lambda_handler(event, context):
     auth_header = headers.get('Authorization')
     if not auth_header or not auth_header.startswith('Bearer '):
         logger.error("Authorization header missing or invalid")
+        cloudwatch_client.put_metric_data(
+            Namespace='FileSlaErrors',
+            MetricData=[
+                {
+                    'MetricName': 'UnauthorizedRequests',
+                    'Dimensions': [
+                        {
+                            'Name': 'FunctionName',
+                            'Value': context.function_name
+                        }
+                    ],
+                    'Timestamp': datetime.utcnow(),
+                    'Value': 1,
+                    'Unit': 'Count'
+                }
+            ]
+        )
         return {
             'statusCode': 401,
             'body': json.dumps({'message': 'Unauthorized'})
@@ -52,9 +70,49 @@ def lambda_handler(event, context):
         claims = jwt.decode(token, jwks, options=jwt_options, issuer=get_issuer())
     except JWTError as e:
         logger.error(f"Invalid token: {str(e)}")
+        cloudwatch_client.put_metric_data(
+            Namespace='FileSlaErrors',
+            MetricData=[
+                {
+                    'MetricName': 'InvalidTokens',
+                    'Dimensions': [
+                        {
+                            'Name': 'FunctionName',
+                            'Value': context.function_name
+                        }
+                    ],
+                    'Timestamp': datetime.utcnow(),
+                    'Value': 1,
+                    'Unit': 'Count'
+                }
+            ]
+        )
         return {
             'statusCode': 401,
             'body': json.dumps({'message': 'Invalid token'})
+        } 
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error fetching JWKS: {str(e)}")
+        cloudwatch_client.put_metric_data(
+            Namespace='FileSlaErrors',
+            MetricData=[
+                {
+                    'MetricName': 'JWKSFetchErrors',
+                    'Dimensions': [
+                        {
+                            'Name': 'FunctionName',
+                            'Value': context.function_name
+                        }
+                    ],
+                    'Timestamp': datetime.utcnow(),
+                    'Value': 1,
+                    'Unit': 'Count'
+                }
+            ]
+        )
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'message': 'Internal server error', 'error': str(e)})
         }
     
     # Extract data from request body
@@ -63,6 +121,23 @@ def lambda_handler(event, context):
         sla_errors = body['sla_error']
     except (json.JSONDecodeError, KeyError) as e:
         logger.error(f"Bad request: {str(e)}")
+        cloudwatch_client.put_metric_data(
+            Namespace='FileSlaErrors',
+            MetricData=[
+                {
+                    'MetricName': 'BadRequest',
+                    'Dimensions': [
+                        {
+                            'Name': 'FunctionName',
+                            'Value': context.function_name
+                        }
+                    ],
+                    'Timestamp': datetime.utcnow(),
+                    'Value': 1,
+                    'Unit': 'Count'
+                }
+            ]
+        )
         return {
             'statusCode': 400,
             'body': json.dumps({'message': 'Bad request'})
@@ -88,8 +163,42 @@ def lambda_handler(event, context):
                     'ReceivedTimestamp': affected_date
                 }
                 table.put_item(Item=item)
+        cloudwatch_client.put_metric_data(
+            Namespace='FileSlaErrors',
+            MetricData=[
+                {
+                    'MetricName': 'SuccessfulProcess',
+                    'Dimensions': [
+                        {
+                            'Name': 'FunctionName',
+                            'Value': context.function_name
+                        }
+                    ],
+                    'Timestamp': datetime.utcnow(),
+                    'Value': 1,
+                    'Unit': 'Count'
+                }
+            ]
+        )
     except Exception as e:
         logger.error(f"Error storing data in DynamoDB: {str(e)}")
+        cloudwatch_client.put_metric_data(
+            Namespace='FileSlaErrors',
+            MetricData=[
+                {
+                    'MetricName': 'DynamoDBErrors',
+                    'Dimensions': [
+                        {
+                            'Name': 'FunctionName',
+                            'Value': context.function_name
+                        }
+                    ],
+                    'Timestamp': datetime.utcnow(),
+                    'Value': 1,
+                    'Unit': 'Count'
+                }
+            ]
+        )
         return {
             'statusCode': 500,
             'body': json.dumps({'message': 'Internal server error', 'error': str(e)})

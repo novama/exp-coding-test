@@ -1,6 +1,7 @@
 import json
 import boto3
 import os
+from datetime import datetime
 import logging
 
 # Set up logging
@@ -8,6 +9,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 client = boto3.client('cognito-idp')
+cloudwatch_client = boto3.client('cloudwatch')
 
 
 def lambda_handler(event, context):
@@ -39,6 +41,26 @@ def lambda_handler(event, context):
 
         # Retrieve the token from the authentication response
         token = response['AuthenticationResult']['IdToken']
+        
+        # Log successful authentication metric
+        cloudwatch_client.put_metric_data(
+            Namespace='FileSlaErrors',
+            MetricData=[
+                {
+                    'MetricName': 'SuccessfulAuth',
+                    'Dimensions': [
+                        {
+                            'Name': 'FunctionName',
+                            'Value': context.function_name
+                        }
+                    ],
+                    'Timestamp': datetime.utcnow(),
+                    'Value': 1,
+                    'Unit': 'Count'
+                }
+            ]
+        )
+
         return {
             'statusCode': 200,
             'body': json.dumps({'token': token})
