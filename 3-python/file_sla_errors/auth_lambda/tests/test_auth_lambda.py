@@ -7,6 +7,10 @@ from auth_lambda.auth_lambda import lambda_handler
 # Get the default region from env variables
 testRegion = os.environ['AWS_DEFAULT_REGION']
 
+class MockContext:
+    def __init__(self, function_name):
+        self.function_name = function_name
+
 
 @mock_aws
 def test_auth_lambda():
@@ -38,7 +42,8 @@ def test_auth_lambda():
     event = {
         'body': json.dumps({'username': 'test_user', 'password': 'Test@1234'})
     }
-    response = lambda_handler(event, None)
+    context = MockContext(function_name='auth_lambda')
+    response = lambda_handler(event, context)
     assert response['statusCode'] == 200, f"Expected status code 200 but got {response['statusCode']}. Response body: {response['body']}"
     assert 'token' in json.loads(response['body'])
 
@@ -57,6 +62,7 @@ def test_auth_lambda_invalid_credentials():
     event = {
         'body': json.dumps({'username': 'wrong_user', 'password': 'wrong_password'})
     }
-    response = lambda_handler(event, None)
+    context = MockContext(function_name='auth_lambda')
+    response = lambda_handler(event, context)
     assert response['statusCode'] == 401, f"Expected status code 401 but got {response['statusCode']}. Response body: {response['body']}"
     assert 'message' in json.loads(response['body'])

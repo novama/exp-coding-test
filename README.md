@@ -18,7 +18,6 @@ We have folders that have files in them that move through the system as they pro
 
 - You need to create a powershell that will check a list of folders to see if their SLA has been tripped.
 - The powershell needs to send all of the folders, and corresponding file names that have tripped to a REST endpoint.
-
 - The request must be a JSON object that looks like:
 ```JSON
 {

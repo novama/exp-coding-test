@@ -7,6 +7,10 @@ from file_sla_error_lambda.file_sla_error_lambda import lambda_handler
 # Get the default region from env variables
 testRegion = os.environ['AWS_DEFAULT_REGION']
 
+class MockContext:
+    def __init__(self, function_name):
+        self.function_name = function_name
+
 
 @mock_aws
 def test_file_sla_error_lambda():
@@ -68,7 +72,8 @@ def test_file_sla_error_lambda():
             ]
         })
     }
-    response = lambda_handler(event, None)
+    context = MockContext(function_name='file_sla_error_lambda')
+    response = lambda_handler(event, context)
     assert response['statusCode'] == 200, f"Expected status code 200 but got {response['statusCode']}. Response body: {response['body']}"
     
     # Verify data in DynamoDB
@@ -114,5 +119,6 @@ def test_file_sla_error_lambda_invalid_token():
             ]
         })
     }
-    response = lambda_handler(event, None)
+    context = MockContext(function_name='file_sla_error_lambda')
+    response = lambda_handler(event, context)
     assert response['statusCode'] == 401, f"Expected status code 401 but got {response['statusCode']}. Response body: {response['body']}"
