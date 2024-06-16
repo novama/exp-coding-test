@@ -60,24 +60,30 @@ Unit tests for the `file_sla_error_lambda` function:
 
 #### Dependencies
 
-Ensure the following dependencies are included in your `requirements.txt` files:
+- **Python 3.12** recommended.
+- Ensure the following dependencies are included in your `requirements.txt` files:
 
 **auth_lambda/requirements.txt**
 ```plaintext
 boto3
 botocore
+joserfc
 moto
 python-jose
 pytest
+pytest-env
+requests
 ```
 
 **file_sla_error_lambda/requirements.txt**
 ```plaintext
 boto3
 botocore
+joserfc
 moto
 python-jose
 pytest
+pytest-env
 requests
 ```
 
@@ -153,3 +159,6 @@ The python must match the AWS Design and the input from the Powershell will be t
 - Write unit tests with _moto_.
 
 **NOTE:** This will be executed locally, writing unit tests using moto will let us execute locally so we can talk through scenarios.
+
+
+[Go back to the Coding Test root](../../)
