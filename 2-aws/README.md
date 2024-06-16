@@ -92,3 +92,6 @@ Amazon CloudWatch is used for monitoring and logging the application, tracking m
   - IAM roles and policies can be used to restrict access to resources.
   - API Gateway methods should be protected by resource policies and IAM roles.
   - Use of HTTPS for API Gateway to ensure secure data transmission.
+
+
+[Go back to the Coding Test root](../)
