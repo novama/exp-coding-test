@@ -1,0 +1,14 @@
+@startuml DynamoDB Table Structure Diagram
+!define RECTANGLE class
+
+title DynamoDB Table Structure Diagram
+
+RECTANGLE FileSlaErrors {
+    :FileSlaErrors Table;
+    :Primary Key: ErrorId;
+    :Attributes: Folder, AffectedDate, SLA, Files;
+    :GSI: AffectedDateIndex (AffectedDate, Folder);
+    :GSI: FolderIndex (Folder, AffectedDate);
+}
+
+@enduml
