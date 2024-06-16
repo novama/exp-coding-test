@@ -81,11 +81,10 @@ def lambda_handler(event, context):
                 item = {
                     'ErrorID': str(uuid.uuid4()),
                     'Folder': folder,
+                    'AffectedDate': affected_date,
                     'SLA': sla,
                     'Filename': file['filename'],
                     'CreationDate': file['creationDate'],
-                    'AffectedDate': affected_date,
-                    'ReceivedTimestamp': affected_date
                 }
                 table.put_item(Item=item)
     except Exception as e:

@@ -1,7 +1,9 @@
 # Part 3 of the Coding Test: Python
 
 ## Solution:
+
 ### AWS Serverless File SLA Error Processing
+
 #### Overview
 
 This project consists of two AWS Lambda functions, `auth_lambda` and `file_sla_error_lambda`, designed to handle user authentication and file SLA error processing, respectively. The solution utilizes AWS Cognito for user authentication and DynamoDB for storing SLA error data. The Python scripts are tested using `pytest` with `moto` for mocking AWS services.
