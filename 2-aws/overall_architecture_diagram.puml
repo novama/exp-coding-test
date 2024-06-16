@@ -1,0 +1,52 @@
+@startuml Overall Architecture Diagram
+!define RECTANGLE class
+
+title Overall Architecture Diagram
+
+RECTANGLE PowerShellScript {
+    :Check folders for SLA breaches;
+    :Send data to REST endpoints;
+}
+
+RECTANGLE APIGateway {
+    :Expose /auth endpoint;
+    :Expose /file_sla_error endpoint;
+}
+
+RECTANGLE AuthLambda {
+    :Authenticate user;
+    :Return JWT token;
+}
+
+RECTANGLE FileSlaErrorLambda {
+    :Process SLA data;
+    :Store data in DynamoDB;
+}
+
+RECTANGLE DynamoDB {
+    :FileSlaErrors Table;
+    :Primary Key: ErrorId;
+    :Attributes: Folder, AffectedDate, SLA, Files;
+    :GSI: AffectedDateIndex (AffectedDate, Folder);
+    :GSI: FolderIndex (Folder, AffectedDate);
+}
+
+RECTANGLE Cognito {
+    :User Pool for authentication;
+}
+
+RECTANGLE CloudWatch {
+    :Monitor metrics and logs;
+    :Track API usage;
+}
+
+PowerShellScript --> APIGateway : Send Data
+APIGateway --> AuthLambda : /auth
+APIGateway --> FileSlaErrorLambda : /file_sla_error
+AuthLambda --> Cognito : User Authentication
+FileSlaErrorLambda --> Cognito : JWT Validation
+FileSlaErrorLambda --> DynamoDB : Store Data
+AuthLambda --> CloudWatch : Logs & Metrics
+FileSlaErrorLambda --> CloudWatch : Logs & Metrics
+
+@enduml

@@ -1,11 +1,11 @@
 import json
-import boto3
+import logging
 import os
 import uuid
+from datetime import datetime, timezone
+import boto3
 import requests
-from datetime import datetime
 from jose import jwt, JWTError
-import logging
 
 # Set up logging
 logger = logging.getLogger()
@@ -150,17 +150,16 @@ def lambda_handler(event, context):
             folder = error['folder']
             sla = error['sla']
             files = error['files']
-            affected_date = datetime.utcnow().isoformat()
+            affected_date = datetime.now(timezone.utc).isoformat()
             
             for file in files:
                 item = {
                     'ErrorID': str(uuid.uuid4()),
                     'Folder': folder,
+                    'AffectedDate': affected_date,
                     'SLA': sla,
                     'Filename': file['filename'],
                     'CreationDate': file['creationDate'],
-                    'AffectedDate': affected_date,
-                    'ReceivedTimestamp': affected_date
                 }
                 table.put_item(Item=item)
         cloudwatch_client.put_metric_data(

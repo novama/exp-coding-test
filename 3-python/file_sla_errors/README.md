@@ -1,7 +1,9 @@
 # Part 3 of the Coding Test: Python
 
 ## Solution:
+
 ### AWS Serverless File SLA Error Processing
+
 #### Overview
 
 This project consists of two AWS Lambda functions, `auth_lambda` and `file_sla_error_lambda`, designed to handle user authentication and file SLA error processing, respectively. The solution utilizes AWS Cognito for user authentication and DynamoDB for storing SLA error data. The Python scripts are tested using `pytest` with `moto` for mocking AWS services.
@@ -65,15 +67,18 @@ Unit tests for the `file_sla_error_lambda` function:
 
 #### Dependencies
 
-Ensure the following dependencies are included in your `requirements.txt` files:
+- **Python 3.12** recommended.
+- Ensure the following dependencies are included in your `requirements.txt` files:
 
 **auth_lambda/requirements.txt**
 ```plaintext
 boto3
 botocore
+joserfc
 moto
 python-jose
 pytest
+pytest-env
 requests
 ```
 
@@ -81,9 +86,11 @@ requests
 ```plaintext
 boto3
 botocore
+joserfc
 moto
 python-jose
 pytest
+pytest-env
 requests
 ```
 
@@ -150,7 +157,7 @@ pytest tests/
 
 #### Deployment
 
-To deploy the Lambdas, use the provided `deploy.sh` script in the `deploy` directory, which packages and uploads the Lambda functions to AWS.
+To deploy the Lambdas, use the provided `deploy.sh` or `deploy.ps1` scripts in the `deploy` directory, which packages and uploads the Lambda functions to AWS.
 
 Ensure you have the necessary IAM permissions and AWS CLI configured before running the deployment script.
 
@@ -173,3 +180,6 @@ The python must match the AWS Design and the input from the Powershell will be t
 - Write unit tests with _moto_.
 
 **NOTE:** This will be executed locally, writing unit tests using moto will let us execute locally so we can talk through scenarios.
+
+
+[Go back to the Coding Test root](../../)

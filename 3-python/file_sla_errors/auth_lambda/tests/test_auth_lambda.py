@@ -1,11 +1,12 @@
-import os
 import json
+import os
 import boto3
 from moto import mock_aws
 from auth_lambda.auth_lambda import lambda_handler
 
 # Get the default region from env variables
 testRegion = os.environ['AWS_DEFAULT_REGION']
+
 
 class MockContext:
     def __init__(self, function_name):

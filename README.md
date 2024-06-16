@@ -1,4 +1,4 @@
-# Coding Test
+# Coding Test Definition:
 
 ## Important Notes
 
@@ -66,3 +66,9 @@ The python must match the AWS Design and the input from the Powershell will be t
 - Write unit tests with _moto_.
 
 **NOTE:** This will be executed locally, writing unit tests using moto will let us execute locally so we can talk through scenarios.
+
+---
+# Coding Test Solution:
+- Go to the coding test solution for part 1 here: [PowerShell solution](/1-ps)
+- Go to the coding test solution for part 2 here: [AWS Design solution](/2-aws)
+- Go to the coding test solution for part 3 here: [Python solution](/3-python/file_sla_errors/)
