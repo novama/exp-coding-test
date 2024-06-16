@@ -1,11 +1,11 @@
 import json
-import boto3
+import logging
 import os
 import uuid
+from datetime import datetime, timezone
+import boto3
 import requests
-from datetime import datetime
 from jose import jwt, JWTError
-import logging
 
 # Set up logging
 logger = logging.getLogger()
@@ -75,7 +75,7 @@ def lambda_handler(event, context):
             folder = error['folder']
             sla = error['sla']
             files = error['files']
-            affected_date = datetime.utcnow().isoformat()
+            affected_date = datetime.now(timezone.utc).isoformat()
             
             for file in files:
                 item = {
